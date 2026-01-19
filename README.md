@@ -1,4 +1,7 @@
+<div align="center">
 # Deepfake Detection System
+<br>
+</div>
 
 <p align="center">
   <img src="ReadmeExample.gif" alt="" width="900"/>
