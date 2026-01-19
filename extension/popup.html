@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { 
+      width: 380px; 
+      padding: 20px; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #dc2626;
+      margin: 0;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    
+    h3 { 
+      margin: 0 0 8px 0; 
+      color: #1a202c;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      font-size: 13px;
+      color: #718096;
+      margin-bottom: 20px;
+    }
+    
+    button {
+      width: 100%; 
+      padding: 14px; 
+      margin-top: 12px;
+      cursor: pointer; 
+      border: none; 
+      border-radius: 10px; 
+      font-size: 15px; 
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    #startBtn { 
+      background: #dc2626;
+      color: white;
+    }
+    
+    #startBtn:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+    
+    #stopBtn { 
+      background: #ea580c;
+      color: white; 
+      display: none; 
+    }
+    
+    #stopBtn:hover:not(:disabled) {
+      background: #c2410c;
+    }
+    
+    #cropBtn {
+      background: #f59e0b;
+      color: white;
+      display: none;
+    }
+    
+    #cropBtn:hover:not(:disabled) {
+      background: #d97706;
+    }
+    
+    #analyzeBtn {
+      background: #dc2626;
+      color: white;
+      display: none;
+    }
+    
+    #analyzeBtn:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+    
+    #resetBtn { 
+      background: #f3f4f6;
+      color: #4a5568;
+      display: none;
+      margin-top: 16px;
+    }
+    
+    #resetBtn:hover:not(:disabled) {
+      background: #e5e7eb;
+    }
+    
+    #status { 
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    
+    #result { 
+      margin-top: 16px;
+      padding: 20px;
+      border-radius: 12px;
+      display: none;
+      font-size: 15px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .fake { 
+      background: #dc2626;
+      color: white;
+    }
+    
+    .real { 
+      background: #16a34a;
+      color: white;
+    }
+    
+    .loader { 
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #fecaca;
+      border-radius: 50%;
+      border-top-color: #dc2626;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin { 
+      to { transform: rotate(360deg); } 
+    }
+    
+    #cropModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    #cropModal.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #cropCanvas {
+      max-width: 100%;
+      max-height: 70vh;
+      border: 2px solid #dc2626;
+      cursor: crosshair;
+      background: #000;
+    }
+    
+    .crop-controls {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .crop-controls button {
+      width: auto;
+      padding: 10px 24px;
+      margin: 0;
+    }
+    
+    .instruction {
+      background: #dc2626;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Deepfake Detector</h3>
+    <p class="subtitle">Analyze videos for AI manipulation</p>
+    
+    <button id="startBtn">Start Screen Recording</button>
+    <button id="stopBtn">Stop Recording</button>
+    <button id="cropBtn">Crop Video Area</button>
+    <button id="analyzeBtn">Analyze for Deepfake</button>
+
+    <div id="status">Ready to record</div>
+    <div id="result"></div>
+    
+    <button id="resetBtn">Start New Test</button>
+  </div>
+
+  <div id="cropModal">
+    <div class="instruction">
+      Click and drag to select the area you want to analyze
+    </div>
+    <canvas id="cropCanvas"></canvas>
+    <div class="crop-controls">
+      <button id="confirmCrop">Confirm Selection</button>
+      <button id="cancelCrop">Cancel</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
