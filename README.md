@@ -1,5 +1,7 @@
 <div align="center">
+
 # Deepfake Detection System
+
 <br>
 </div>
 
