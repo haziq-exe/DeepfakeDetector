@@ -84,11 +84,6 @@ The browser extension provides a user-friendly interface for deepfake detection:
 4. Server processes video and returns annotated frame
 5. Results displayed with probability score and AI explanation
 
-**Technical Implementation:**
-- Uses Chrome Storage API to persist recordings between sessions
-- Canvas-based cropping interface with real-time preview
-- Communicates with server via multipart form data requests
-- Extracts analysis metadata from HTTP response headers
 
 ## API Server
 
@@ -105,23 +100,6 @@ The FastAPI backend handles video processing and model inference:
 - Accepts: image file
 - Returns: annotated image with GradCAM overlay
 
-**Processing Pipeline:**
-1. Extract K frames uniformly from uploaded video
-2. Preprocess frames (resize, normalize)
-3. Batch inference through frame detector
-4. Compute video-level probability
-5. If deepfake detected:
-   - Find frame with highest individual probability
-   - Run GradCAM on that frame
-   - Generate VLM explanation for highlighted region
-   - Annotate image with circle and text
-6. Return results to client
-
-**Server Architecture:**
-- Models loaded once at startup for efficiency
-- GPU acceleration when available
-- Temporary file handling for video processing
-- Proper error handling and HTTP status codes
 
 ## Installation
 
@@ -175,6 +153,9 @@ Update the `FASTAPI_SERVER_URL` in `extension/popup.js` with your ngrok URL.
 ## Dataset Format
 
 **Frame dataset structure:**
+
+[Dataset Source](https://www.kaggle.com/datasets/reubensuju/celeb-df-v2)
+
 ```
 data/
 ├── real/
@@ -189,6 +170,9 @@ data/
 ```
 
 **Video dataset structure:**
+
+[Dataset Source](https://www.kaggle.com/datasets/debajyatidey/celeb-df-v2-real-videos-cropped-frames)
+
 ```
 data/
 ├── Celeb-real/
@@ -198,52 +182,3 @@ data/
     ├── video1.mp4
     └── video2.mp4
 ```
-
-## Project Structure
-
-```
-deepfake-detector/
-├── training/
-│   ├── data_utils.py      # Dataset classes and preprocessing
-│   ├── model.py           # Neural network architectures
-│   └── trainer.py         # Training loops and optimization
-├── inference/
-│   ├── predict.py         # Video inference utilities
-│   └── visualization.py   # GradCAM and annotation tools
-├── server/
-│   └── api.py            # FastAPI server implementation
-├── extension/
-│   ├── manifest.json     # Chrome extension configuration
-│   ├── popup.html        # Extension UI
-│   └── popup.js          # Extension logic
-├── train.py              # Training entry point
-├── predict.py            # Inference entry point
-└── requirements.txt      # Python dependencies
-```
-
-## Technical Details
-
-**Model Parameters:**
-- Input size: 224x224
-- Batch normalization: ImageNet statistics
-- Optimizer: Adam with weight decay 1e-5
-- Loss: Binary cross-entropy with logits (weighted for class imbalance)
-
-**Inference Configuration:**
-- Default sampling: 8-20 frames per video
-- Frame selection: uniform temporal sampling
-- Batch processing for efficiency
-
-**Performance Considerations:**
-- Multi-GPU support via DataParallel
-- Non-blocking data transfers
-- Gradient accumulation for large batch sizes
-- Mixed precision training compatible
-
-## License
-
-MIT License
-
-## Acknowledgments
-
-Developed for InnovateX Hackathon 2024. Special thanks to the organizers and judges.
